@@ -10,6 +10,7 @@ bothdays <- rbind(day1,day2)
 dates <- as.Date(bothdays$Date, format="%d/%m/%Y")
 times <- bothdays$Time
 datetime <- paste(dates,times)
+datetime <- strptime(datetime, "%Y-%m-%d %H:%M:%S")
 data <- cbind(datetime, bothdays)
 
 # create plot1
@@ -22,19 +23,16 @@ axis(1, at=c(0,2,4,6), labels=c(0,2,4,6))
 
 # create plot2
 png("plot2.png", width = 480, height = 480)
-plot(active_power, type="l", ylab="Global Active Power (kilowatts)", xlab="", xaxt="n")
-axis(1, at=c(1, 1500, length(active_power)), labels=c("Thu","Fri","Sat"))
-
+plot(datetime, active_power, type="l", ylab="Global Active Power (kilowatts)", xlab="")
 
 # create plot3
 png("plot3.png", width = 480, height = 480)
 sub1 <- c(as.numeric(data$Sub_metering_1))
 sub2 <- c(as.numeric(data$Sub_metering_2))
 sub3 <- c(as.numeric(data$Sub_metering_3))
-plot(sub1, type="l", ylab="Energy sub metering", xlab="",xaxt="n")
-axis(1, at=c(1, (length(active_power)/2), length(active_power)), labels=c("Thu","Fri","Sat"))
-lines(sub2, col="red")
-lines(sub3, col="blue")
+plot(datetime, sub1, type="l", ylab="Energy sub metering", xlab="")
+lines(datetime, sub2, col="red")
+lines(datetime, sub3, col="blue")
 legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
        cex=0.8, col=c("black","red","blue"), lty=1)
 
@@ -43,23 +41,19 @@ legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"),
 png("plot4.png", width = 480, height = 480)
 par(mfrow=c(2,2)) # show four plots in one png file
 
-plot(active_power, type="l", ylab="Global Active Power", xlab="", xaxt="n")
-axis(1, at=c(1, (length(active_power)/2), length(active_power)), labels=c("Thu","Fri","Sat"))
+plot(datetime, active_power, type="l", ylab="Global Active Power", xlab="")
 
 voltage <- c(as.numeric(data$Voltage))
-plot(voltage, type="l", xlab="datetime", xaxt="n", ylab="Voltage")
-axis(1, at=c(1, (length(voltage)/2), length(voltage)), labels=c("Thu","Fri","Sat"))
+plot(datetime, voltage, type="l", xlab="datetime", ylab="Voltage")
 
-plot(sub1, type="l", ylab="Energy sub metering", xaxt="n", xlab="")
-axis(1, at=c(1, (length(sub1)/2), length(sub1)), labels=c("Thu","Fri","Sat"))
-lines(sub2, col="red")
-lines(sub3, col="blue")
+plot(datetime, sub1, type="l", ylab="Energy sub metering", xlab="")
+lines(datetime, sub2, col="red")
+lines(datetime, sub3, col="blue")
 legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
        cex=0.6, col=c("black","red","blue"), lty=1, bty="n")
 
 reactive_power <- c(as.numeric(data$Global_reactive_power))
-plot(reactive_power, type="l", ylab="Global_reactive_power", xlab="datetime", xaxt="n")
-axis(1, at=c(1, (length(reactive_power)/2), length(reactive_power)), labels=c("Thu","Fri","Sat"))
+plot(datetime, reactive_power, type="l", ylab="Global_reactive_power", xlab="datetime")
 
 dev.off()
 

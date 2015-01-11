@@ -38,13 +38,28 @@ lines(sub3, col="blue")
 legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
        cex=0.8, col=c("black","red","blue"), lty=1)
 
-reactive_power <- c(data$Global_reactive_power)
-plot(reactive_power, type="l", xlab="", ylab="Global_reactive_power", xaxt="n", yaxt="n")
-axis(1, at=c(1, 1500, length(active_power)), labels=c("Thu","Fri","Sat"))
-axis(2, at=c(0,45,90,135,180,225), labels=c("0.0","0.1","0.2","0.3","0.4","0.5"))
 
-voltage <- c(data$Voltage)
-plot(voltage, type="l", xlab="", xaxt="n", yaxt="n")
-axis(1, at=c(1, 1500, length(active_power)), labels=c("Thu","Fri","Sat"))
-axis(2, at=c(800,1200,1600,2000), labels=c("234","238","242","246"))
+# create plot4
+png("plot4.png", width = 480, height = 480)
+par(mfrow=c(2,2)) # show four plots in one png file
+
+plot(active_power, type="l", ylab="Global Active Power", xlab="", xaxt="n")
+axis(1, at=c(1, (length(active_power)/2), length(active_power)), labels=c("Thu","Fri","Sat"))
+
+voltage <- c(as.numeric(data$Voltage))
+plot(voltage, type="l", xlab="datetime", xaxt="n", ylab="Voltage")
+axis(1, at=c(1, (length(voltage)/2), length(voltage)), labels=c("Thu","Fri","Sat"))
+
+plot(sub1, type="l", ylab="Energy sub metering", xaxt="n", xlab="")
+axis(1, at=c(1, (length(sub1)/2), length(sub1)), labels=c("Thu","Fri","Sat"))
+lines(sub2, col="red")
+lines(sub3, col="blue")
+legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
+       cex=0.6, col=c("black","red","blue"), lty=1, bty="n")
+
+reactive_power <- c(as.numeric(data$Global_reactive_power))
+plot(reactive_power, type="l", ylab="Global_reactive_power", xlab="datetime", xaxt="n")
+axis(1, at=c(1, (length(reactive_power)/2), length(reactive_power)), labels=c("Thu","Fri","Sat"))
+
+dev.off()
 
